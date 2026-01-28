@@ -3,11 +3,17 @@ from sqlalchemy.orm import Session
 from app.database.db import get_db
 from app.repositories.clients import ClientRepository
 from app.schemas.client import ClientResponse, ClientCreate
+from app.services.clients import ClientService
 router = APIRouter(prefix="/clients")
 
-@router.post("", response_model=ClientResponse)
+@router.post("/", response_model=ClientResponse)
 def create_client(data: ClientCreate, db: Session = Depends(get_db)):
-    repo = ClientRepository(db)
-    return repo.create(first_name=data.first_name,
+    service = ClientService(db)
+    return service.create_client(first_name=data.first_name,
                         last_name=data.last_name,
                         initial_balance=data.initial_balance)
+
+@router.get("/", response_model=list[ClientResponse])
+def list_clients(db: Session = Depends(get_db)):
+    service = ClientService(db)
+    return service.list_clients()
