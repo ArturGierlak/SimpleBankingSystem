@@ -1,5 +1,5 @@
 from decimal import Decimal
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 from app.models.client import Client
 
@@ -26,9 +26,8 @@ class ClientRepository:
         return list(self.db.execute(statement).all())
     
     def delete(self, client_id: int):
-        client = self.get(Client, client_id)
-        if not client:
-            return None
-        self.db.delete(client)
+        statement = delete(Client).where(Client.id == client_id)
+        result = self.db.execute(statement)
         self.db.commit()
-        return client
+        return result.one_or_none()
+    
