@@ -1,0 +1,13 @@
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from app.database.db import get_db
+from app.repositories.clients import ClientRepository
+from app.schemas.client import ClientResponse, ClientCreate
+router = APIRouter(prefix="/clients")
+
+@router.post("", response_model=ClientResponse)
+def create_client(data: ClientCreate, db: Session = Depends(get_db)):
+    repo = ClientRepository(db)
+    return repo.create(first_name=data.first_name,
+                        last_name=data.last_name,
+                        initial_balance=data.initial_balance)
