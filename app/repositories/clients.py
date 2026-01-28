@@ -17,3 +17,7 @@ class ClientRepository:
         self.db.refresh(client)
         return client
     
+    def get(self, client_id: int):
+        statement = select(Client).where(Client.id == client_id)
+        return self.db.execute(statement).one_or_none()
+    
