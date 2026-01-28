@@ -24,3 +24,11 @@ class ClientRepository:
     def list(self):
         statement = select(Client)
         return list(self.db.execute(statement).all())
+    
+    def delete(self, client_id: int):
+        client = self.get(Client, client_id)
+        if not client:
+            return None
+        self.db.delete(client)
+        self.db.commit()
+        return client
