@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from models.base import Base
-from database.db import engine
+from app.models.base import Base
+from app.database.db import engine
 import uvicorn
 
 def create_app():
