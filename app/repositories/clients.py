@@ -21,3 +21,6 @@ class ClientRepository:
         statement = select(Client).where(Client.id == client_id)
         return self.db.execute(statement).one_or_none()
     
+    def list(self):
+        statement = select(Client)
+        return list(self.db.execute(statement).all())
