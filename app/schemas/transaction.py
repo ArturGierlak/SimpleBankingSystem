@@ -17,4 +17,4 @@ class TransactionResponse(TransactionBase):
     balance_after: Decimal
 
     class Config():
-        orm_more = True
+        orm_mode = True
