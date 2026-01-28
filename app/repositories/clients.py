@@ -10,8 +10,8 @@ class ClientRepository:
 
     def create(self, first_name: str, last_name: str, initial_balance: Decimal):
         client = Client(first_name = first_name,
-                        last_name = last_name,
-                        initial_balance = initial_balance)
+                            last_name = last_name,
+                            initial_balance = initial_balance)
         self.db.add(client)
         self.db.commit()
         self.db.refresh(client)
