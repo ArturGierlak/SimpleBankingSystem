@@ -18,5 +18,8 @@ class TransactionService:
 
         return self.repoTransaction.create(client_id, transaction_type, amount, balance_after)
 
-
+    def list_client_transactions(self, client_id: int):
+        return self.repoTransaction.list(client_id)
     
+    def list_all_transactions(self):
+        return self.repoTransaction.list_all()
