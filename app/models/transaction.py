@@ -13,3 +13,9 @@ class Transaction(Base):
     balance_after = Column(Numeric(12, 2), nullable=False)
 
     client = relationship("Client", back_populates="transactions")
+
+    def __str__(self):
+        return f"Transaction: Client: {self.client_id}, type: {self.transaction_type},  {self.amount} PLN,, timestamp: {self.timestamp}"
+    
+    def __repr__(self):
+         return f"Transaction (id={self.id}, client={self.client_id}, transaction_type={self.transaction_type}, amount={self.amount}, timestamp={self.timestamp}, balance_after={self.balance_after})"
