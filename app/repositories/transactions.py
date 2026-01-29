@@ -19,6 +19,10 @@ class TransactionRepository:
         return transaction
     
     def list(self, client_id: int):
-        statement = select(Transaction).where(Client.id == client_id)
-        return list(self.db.execute(statement)._allrows())
+        statement = select(Transaction).where(Transaction.client_id == client_id)
+        return list(self.db.execute(statement).scalars().all())
+    
+    def list_all(self):
+        statement = select(Transaction)
+        return list(self.db.execute(statement).scalars().all())
     
