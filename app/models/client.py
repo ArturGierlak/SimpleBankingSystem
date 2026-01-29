@@ -7,9 +7,19 @@ class Client(Base):
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
-    initial_balance = Column(Numeric(12,2), default=0.0)
+    _initial_balance = Column("initial_balance", Numeric(12,2), default=0.0)
 
     transactions = relationship("Transaction", back_populates="client", cascade="all, delete-orphan")
+
+    @property
+    def initial_balance(self):
+        return self._initial_balance
+    
+    @initial_balance.setter
+    def initial_balance(self, value):
+        if value < 0:
+            raise ValueError("Initial balance cannot be negative")
+        self._initial_balance = value
 
     def __str__(self):
         return f"Client {self.first_name} {self.last_name} : {self.initial_balance} PLN"
