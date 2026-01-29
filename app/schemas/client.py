@@ -1,6 +1,6 @@
 import datetime
 from decimal import Decimal
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class ClientBase(BaseModel):
     first_name: str
@@ -13,5 +13,4 @@ class ClientCreate(ClientBase):
 class ClientResponse(ClientBase):
     id: int
 
-    class Config():
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

@@ -1,6 +1,6 @@
 import datetime
 from decimal import Decimal
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class TransactionBase(BaseModel):
@@ -17,4 +17,4 @@ class TransactionResponse(TransactionBase):
     balance_after: Decimal
 
     class Config():
-        orm_mode = True
+        model_config = ConfigDict(from_attributes=True)
