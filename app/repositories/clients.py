@@ -23,7 +23,7 @@ class ClientRepository:
     
     def list(self):
         statement = select(Client)
-        return list(self.db.execute(statement).all())
+        return list(self.db.execute(statement).scalars().all())
     
     def delete(self, client_id: int):
         statement = delete(Client).where(Client.id == client_id)
