@@ -18,6 +18,10 @@ def get_client(client_id: int, db: Session = Depends(get_db)):
     service = ClientService(db)
     return service.get_client(client_id=client_id)
     
+@router.get("/", response_model=list[ClientResponse])
+def list_clients(db: Session = Depends(get_db)):
+    service = ClientService(db)
+    return service.list_clients()
 
 @router.delete("/{client_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_client(client_id: int, db: Session = Depends(get_db)):
