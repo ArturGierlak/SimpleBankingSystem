@@ -18,8 +18,8 @@ class ClientRepository:
         return client
     
     def get(self, client_id: int):
-        statement = select(Client).where(Client.id == client_id)
-        return self.db.execute(statement).one_or_none()
+        result = self.db.execute(select(Client).where(Client.id == client_id))
+        return result.scalars().first()
     
     def list(self):
         statement = select(Client)
@@ -29,5 +29,5 @@ class ClientRepository:
         statement = delete(Client).where(Client.id == client_id)
         result = self.db.execute(statement)
         self.db.commit()
-        return result.one_or_none()
+        return result.rowcount > 0
     
