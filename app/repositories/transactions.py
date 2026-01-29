@@ -8,10 +8,11 @@ class TransactionRepository:
     def __init__(self, db: Session):
         self.db = db
     
-    def create(self, client_id: int, transaction_type: str, amount: Decimal):
+    def create(self, client_id: int, transaction_type: str, amount: Decimal, balance_after: Decimal):
         transaction = Transaction(client_id = client_id,
                                     transaction_type = transaction_type,
-                                    amount = amount)
+                                    amount = amount,
+                                    balance_after = balance_after)
         self.db.add(transaction)
         self.db.commit()
         self.db.refresh(transaction)
