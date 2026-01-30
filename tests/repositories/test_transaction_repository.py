@@ -2,7 +2,8 @@ from decimal import Decimal
 from app.repositories.transactions import TransactionRepository
 from app.models.client import Client
 from app.models.enums.transaction_type import TransactionType
-
+import pytest
+from app.exceptions import ClientNotFound
 
 def test_create_transaction_success(db_session):
     repo = TransactionRepository(db_session)
@@ -23,3 +24,16 @@ def test_create_transaction_success(db_session):
     assert t.amount == Decimal("50")
     assert t.balance_after == Decimal("150")
     assert t.transaction_type == TransactionType.DEPOSIT
+
+
+
+def test_create_transaction_client_not_found(db_session):
+    repo = TransactionRepository(db_session)
+
+    with pytest.raises(ClientNotFound):
+        repo.create(
+            client_id=999,
+            transaction_type=TransactionType.DEPOSIT,
+            amount=Decimal("50"),
+            balance_after=Decimal("150"),
+        )
