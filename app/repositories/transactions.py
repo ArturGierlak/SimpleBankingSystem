@@ -4,12 +4,13 @@ from sqlalchemy.orm import Session
 from app.models.transaction import Transaction
 from app.models.client import Client
 from app.exceptions import ClientNotFound, InsufficientFundsError
+from app.models.enums.transaction_type import TransactionType
 
 class TransactionRepository:
     def __init__(self, db: Session):
         self.db = db
     
-    def create(self, client_id: int, transaction_type: str, amount: Decimal, balance_after: Decimal):
+    def create(self, client_id: int, transaction_type: TransactionType, amount: Decimal, balance_after: Decimal):
         statement = select(Client).where(Client.id == client_id)
         client = self.db.execute(statement).scalars().all()
         if not client:

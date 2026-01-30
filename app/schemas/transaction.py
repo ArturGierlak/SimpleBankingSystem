@@ -1,11 +1,12 @@
 from datetime import datetime
 from decimal import Decimal
 from pydantic import BaseModel, ConfigDict
+from app.models.enums.transaction_type import TransactionType
 
 
 class TransactionBase(BaseModel):
     client_id: int
-    transaction_type: str
+    transaction_type: TransactionType
     amount: Decimal
 
 class TransactionCreate(TransactionBase):
