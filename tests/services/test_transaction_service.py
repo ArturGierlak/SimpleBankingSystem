@@ -80,3 +80,15 @@ def test_create_transaction_withdrawal_insufficient_funds(mocker):
             transaction_type=TransactionType.WITHDRAWAL,
             amount=Decimal("50"),
         )
+
+def test_negative_amount_error(mocker):
+    db = mocker.Mock()
+
+    service = TransactionService(db)
+
+    with pytest.raises(NegativeAmountError):
+        service.create_transaction(
+            client_id=1,
+            transaction_type=TransactionType.DEPOSIT,
+            amount=Decimal("-10"),
+        )
