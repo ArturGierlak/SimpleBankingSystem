@@ -4,6 +4,7 @@ from app.services.transactions import TransactionService
 from app.schemas.transaction import TransactionResponse
 from datetime import datetime
 from decimal import Decimal
+from app.models.enums.transaction_type import TransactionType
 
 def test_create_transaction(client_with_mocked_db, mocker):
     
@@ -81,3 +82,33 @@ def test_list_client_transactions(client_with_mocked_db, mocker):
     assert float(data[0]["amount"]) == 50.0
 
     mocked_list.assert_called_once_with(123)
+
+
+def test_list_all_transactions(client_with_mocked_db, mocker):
+    client = client_with_mocked_db
+
+    mocked_list_all = mocker.patch.object(
+        TransactionService,
+        "list_all_transactions",
+        return_value=[
+            TransactionResponse(
+                id=10,
+                client_id=999,
+                transaction_type=TransactionType.DEPOSIT,
+                amount=20.0,
+                timestamp=datetime(2024, 1, 1, 10, 0),
+                balance_after=Decimal("80.0"),
+            )
+        ]
+    )
+
+    response = client.get("/transactions/")
+
+    assert response.status_code == 200
+
+    data = response.json()
+    assert isinstance(data, list)
+    assert data[0]["id"] == 10
+    assert data[0]["client_id"] == 999
+
+    mocked_list_all.assert_called_once()
