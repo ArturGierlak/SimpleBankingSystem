@@ -63,3 +63,20 @@ def test_create_transaction_withdrawal(mocker):
     )
 
     assert result["balance_after"] == Decimal("150")
+
+
+def test_create_transaction_withdrawal_insufficient_funds(mocker):
+    db = mocker.Mock()
+
+    mock_client_repo = mocker.patch("app.services.transactions.ClientRepository").return_value
+
+    mock_client_repo.get.return_value = DummyClient(balance=Decimal("20"))
+
+    service = TransactionService(db)
+
+    with pytest.raises(InsufficientFundsError):
+        service.create_transaction(
+            client_id=1,
+            transaction_type=TransactionType.WITHDRAWAL,
+            amount=Decimal("50"),
+        )
