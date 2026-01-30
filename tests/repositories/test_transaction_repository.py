@@ -79,3 +79,19 @@ def test_list_transactions_client_not_found(db_session):
 
     with pytest.raises(ClientNotFound):
         repo.list(client_id=123)
+
+
+def test_list_all_transactions(db_session):
+    repo = TransactionRepository(db_session)
+
+    client = Client(id=1, first_name="Test", last_name="Test", initial_balance=100)
+    db_session.add(client)
+    db_session.commit()
+
+    db_session.add(Transaction(client_id=1, transaction_type=TransactionType.DEPOSIT, amount=10, balance_after=110))
+    db_session.add(Transaction(client_id=1, transaction_type=TransactionType.WITHDRAWAL, amount=5, balance_after=105))
+    db_session.commit()
+
+    result = repo.list_all()
+
+    assert len(result) == 2
