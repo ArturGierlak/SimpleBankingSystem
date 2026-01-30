@@ -2,7 +2,7 @@ from decimal import Decimal
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 from app.models.client import Client
-from app.exceptions import ClientNotFound, ClientAlreadyExists
+from app.exceptions import ClientNotFound, ClientAlreadyExists, InsufficientFundsError
 
 
 class ClientRepository:
@@ -37,6 +37,12 @@ class ClientRepository:
         return list(self.db.execute(statement).scalars().all())
     
     def delete(self, client_id: int):
+        result = self.db.execute(select(Client).where(Client.id == client_id))
+        client = result.scalars().first()
+
+        if not client:
+            raise ClientNotFound(f"Client with id={client_id} does not exist.")
+        
         statement = delete(Client).where(Client.id == client_id)
         result = self.db.execute(statement)
         self.db.commit()
