@@ -2,7 +2,7 @@ from decimal import Decimal
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 from app.models.client import Client
-from app.exceptions import ClientNotFound, ClientAlreadyExists, InsufficientFundsError
+from app.exceptions import ClientNotFound, ClientAlreadyExists, InsufficientFundsError, NegativeInitialBalance
 
 
 class ClientRepository:
@@ -14,6 +14,9 @@ class ClientRepository:
                             last_name = last_name)
         client.initial_balance = initial_balance
 
+        if initial_balance < 0:
+            raise NegativeInitialBalance(f"Initial balance cannot be negative.")
+        
         result = self.db.execute(select(Client).where(Client.last_name == last_name and Client.first_name == first_name)).scalars().first()
         if result:
             raise ClientAlreadyExists(f"Client {first_name} {last_name} already exists in database.")

@@ -10,3 +10,6 @@ class NegativeAmountError(Exception):
 
 class InsufficientFundsError(Exception):
     pass
+
+class NegativeInitialBalance(Exception):
+    pass
