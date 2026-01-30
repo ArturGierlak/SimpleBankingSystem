@@ -27,6 +27,13 @@ class TransactionRepository:
         return transaction
     
     def list(self, client_id: int):
+
+        result = self.db.execute(select(Client).where(Client.id == client_id))
+        client = result.scalars().first()
+
+        if not client:
+            raise ClientNotFound(f"Client with id={client_id} not found.")
+        
         statement = select(Transaction).where(Transaction.client_id == client_id)
         return list(self.db.execute(statement).scalars().all())
     
