@@ -2,7 +2,7 @@ from decimal import Decimal
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 from app.models.client import Client
-from app.exceptions import ClientNotFound
+from app.exceptions import ClientNotFound, ClientAlreadyExists
 
 
 class ClientRepository:
@@ -13,6 +13,11 @@ class ClientRepository:
         client = Client(first_name = first_name,
                             last_name = last_name)
         client.initial_balance = initial_balance
+
+        result = self.db.execute(select(Client).where(Client.last_name == last_name and Client.first_name == first_name)).scalars().first()
+        if result:
+            raise ClientAlreadyExists(f"Client {first_name} {last_name} already exists in database.")
+
         self.db.add(client)
         self.db.commit()
         self.db.refresh(client)
@@ -23,7 +28,7 @@ class ClientRepository:
         client = result.scalars().first()
 
         if not client:
-            raise ClientNotFound(f"Client with id= {client_id} not found.")
+            raise ClientNotFound(f"Client with id={client_id} not found.")
         
         return client
     
