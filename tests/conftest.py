@@ -1,7 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
 from app.main import app
 from app.database.db import get_db
+from sqlalchemy.orm import sessionmaker
+from app.models.base import Base
 
 @pytest.fixture
 def mocked_db(mocker):
@@ -16,3 +19,16 @@ def client_with_mocked_db(mocked_db):
     client = TestClient(app)
     yield client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def db_session():
+    engine = create_engine("sqlite:///:memory:", echo=False)
+    Base.metadata.create_all(engine)
+
+    SessionLocal = sessionmaker(bind=engine)
+    session = SessionLocal()
+
+    yield session
+
+    session.close()
