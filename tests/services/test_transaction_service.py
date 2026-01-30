@@ -40,3 +40,26 @@ def test_create_transaction_deposit(mocker):
     mock_transaction_repo.create.assert_called_once_with(
         123, TransactionType.DEPOSIT, Decimal("50"), Decimal("150")
     )
+
+
+
+def test_create_transaction_withdrawal(mocker):
+    db = mocker.Mock()
+
+    mock_client_repo = mocker.patch("app.services.transactions.ClientRepository").return_value
+
+    mock_transaction_repo = mocker.patch("app.services.transactions.TransactionRepository").return_value
+
+    mock_client_repo.get.return_value = DummyClient(balance=Decimal("200"))
+
+    mock_transaction_repo.create.return_value = {"balance_after": Decimal("150")}
+
+    service = TransactionService(db)
+
+    result = service.create_transaction(
+        client_id=1,
+        transaction_type=TransactionType.WITHDRAWAL,
+        amount=Decimal("50"),
+    )
+
+    assert result["balance_after"] == Decimal("150")
