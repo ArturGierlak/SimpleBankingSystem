@@ -13,3 +13,6 @@ class InsufficientFundsError(Exception):
 
 class NegativeInitialBalance(Exception):
     pass
+
+class UnknownOperation(Exception):
+    pass

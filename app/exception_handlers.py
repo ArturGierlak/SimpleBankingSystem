@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from app.exceptions import ClientNotFound, ClientAlreadyExists, InsufficientFundsError, NegativeInitialBalance
+from app.exceptions import ClientNotFound, ClientAlreadyExists, InsufficientFundsError, NegativeInitialBalance, NegativeAmountError, UnknownOperation
 
 def register_exception_handlers(app: FastAPI):
 
@@ -18,4 +18,12 @@ def register_exception_handlers(app: FastAPI):
     
     @app.exception_handler(NegativeInitialBalance)
     async def negative_initial_balance(request, exc: NegativeInitialBalance):
+        return JSONResponse(status_code=409, content={"error": str(exc)})
+    
+    @app.exception_handler(NegativeAmountError)
+    async def negative_amount_error(request, exc: NegativeAmountError):
+        return JSONResponse(status_code=409, content={"error": str(exc)})
+    
+    @app.exception_handler(UnknownOperation)
+    async def unknown_operation(request, exc: UnknownOperation):
         return JSONResponse(status_code=409, content={"error": str(exc)})
