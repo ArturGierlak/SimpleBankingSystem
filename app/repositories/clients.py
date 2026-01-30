@@ -2,6 +2,7 @@ from decimal import Decimal
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 from app.models.client import Client
+from app.exceptions import ClientNotFound
 
 
 class ClientRepository:
@@ -19,7 +20,12 @@ class ClientRepository:
     
     def get(self, client_id: int):
         result = self.db.execute(select(Client).where(Client.id == client_id))
-        return result.scalars().first()
+        client = result.scalars().first()
+
+        if not client:
+            raise ClientNotFound(f"Client with id= {client_id} not found.")
+        
+        return client
     
     def list(self):
         statement = select(Client)
