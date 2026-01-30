@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Numeric
 from app.models.base import Base
 from sqlalchemy.orm import relationship
+from app.exceptions import NegativeInitialBalance
 class Client(Base):
     __tablename__ = "clients"
 
@@ -18,7 +19,7 @@ class Client(Base):
     @initial_balance.setter
     def initial_balance(self, value):
         if value < 0:
-            raise ValueError("Initial balance cannot be negative")
+            raise NegativeInitialBalance("Initial balance cannot be negative")
         self._initial_balance = value
 
     def __str__(self):
