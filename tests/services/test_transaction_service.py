@@ -92,3 +92,20 @@ def test_negative_amount_error(mocker):
             transaction_type=TransactionType.DEPOSIT,
             amount=Decimal("-10"),
         )
+
+def test_unknown_operation(mocker):
+    db = mocker.Mock()
+
+    mocker.patch("app.services.transactions.ClientRepository")
+
+    service = TransactionService(db)
+
+    class FakeType:
+        pass
+
+    with pytest.raises(UnknownOperation):
+        service.create_transaction(
+            client_id=1,
+            transaction_type=FakeType(),
+            amount=Decimal("10"),
+        )
