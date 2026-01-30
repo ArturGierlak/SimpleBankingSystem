@@ -72,3 +72,10 @@ def test_list_transactions_for_client(db_session):
 
     assert len(result) == 2
     assert all(t.client_id == 1 for t in result)
+
+
+def test_list_transactions_client_not_found(db_session):
+    repo = TransactionRepository(db_session)
+
+    with pytest.raises(ClientNotFound):
+        repo.list(client_id=123)
