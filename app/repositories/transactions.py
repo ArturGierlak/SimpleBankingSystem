@@ -7,6 +7,13 @@ from app.exceptions import ClientNotFound, InsufficientFundsError
 from app.models.enums.transaction_type import TransactionType
 
 class TransactionRepository:
+    """Data access layer for `Transaction` entities.
+
+        Encapsulates all persistence operations related to transactions,
+        including creation and retrieval. This repository expects to be used
+        with a SQLAlchemy `Session` managed by the service layer.
+    """
+
     def __init__(self, db: Session):
         self.db = db
     
