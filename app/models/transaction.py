@@ -4,6 +4,14 @@ from sqlalchemy.orm import relationship
 from app.models.enums.transaction_type import TransactionType
 
 class Transaction(Base):
+    """Database model representing a financial transaction made by a client.
+
+        Each transaction records the operation type (deposit or withdrawal),
+        the affected client, the amount processed, and the resulting balance after the transaction 
+        which is calculated based on client's balance and amount.
+        Timestamps are automatically generated on insertion.
+    """
+
     __tablename__ = "transactions"
 
     id = Column(Integer, primary_key=True, index=True)
