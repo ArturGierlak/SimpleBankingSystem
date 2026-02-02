@@ -17,5 +17,4 @@ class TransactionResponse(TransactionBase):
     timestamp: datetime
     balance_after: Decimal
 
-    class Config():
-        model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True)
