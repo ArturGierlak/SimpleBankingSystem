@@ -4,7 +4,7 @@ from app.database.db import get_db
 from app.repositories.clients import ClientRepository
 from app.schemas.client import ClientResponse, ClientCreate
 from app.services.clients import ClientService
-router = APIRouter(prefix="/clients")
+router = APIRouter(prefix="/clients", tags=["Clients"])
 
 @router.post("/", response_model=ClientResponse)
 def create_client(data: ClientCreate, db: Session = Depends(get_db)):

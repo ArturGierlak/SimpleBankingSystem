@@ -20,6 +20,6 @@ register_exception_handlers(app)
 app.include_router(clients_router)
 app.include_router(transactions_router)
 
-@app.get("/")
+@app.get("/", tags=["Status check"])
 def status():
     return {"status": "Ok"}
