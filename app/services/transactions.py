@@ -7,6 +7,19 @@ from app.models.enums.transaction_type import TransactionType
 from app.exceptions import NegativeAmountError, InsufficientFundsError, UnknownOperation
 
 class TransactionService:
+    """Business logic layer for handling client financial transactions.
+
+        This service orchestrates operations such as deposits and withdrawals,
+        enforcing domain rules such as:
+        - non-negative amounts,
+        - sufficient balance for withdrawals,
+        - recognized transaction types,
+        - consistent updates of account balance.
+
+        The service performs all validations and updates before delegating
+        persistence to the repository layer.
+    """
+
 
     def __init__(self, db: Session):
         self.repoTransaction = TransactionRepository(db)
