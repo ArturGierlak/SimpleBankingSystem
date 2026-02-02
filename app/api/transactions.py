@@ -37,6 +37,19 @@ def create_transaction(data: TransactionCreate, db: Session = Depends(get_db)):
 
 @router.get("/{client_id}", response_model=list[TransactionResponse])
 def list_client_transactions(client_id: int, db: Session = Depends(get_db)):
+    """Return all transactions for the specified client.
+
+        Args:
+            client_id: Identifier of the client.
+            service: Resolved `TransactionService` via dependency injection.
+
+        Returns:
+            List[TransactionResponse]: Transactions in unspecified order.
+
+        Raises:
+            HTTPException: 404 if the client does not exist.
+    """
+
     service_transaction = TransactionService(db)
     return service_transaction.list_client_transactions(client_id)
     
