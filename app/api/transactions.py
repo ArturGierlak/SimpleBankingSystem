@@ -56,5 +56,14 @@ def list_client_transactions(client_id: int, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=list[TransactionResponse])
 def list_all_transactions(db: Session = Depends(get_db)):
+    """Return all transactions in the system.
+
+        Args:
+            service: Resolved `TransactionService` via dependency injection.
+
+        Returns:
+            List[TransactionResponse]: All recorded transactions.
+    """
+
     service = TransactionService(db)
     return service.list_all_transactions()
