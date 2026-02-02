@@ -1,15 +1,20 @@
 from decimal import Decimal
-from app.models.transaction import Transaction
-from app.repositories.transactions import TransactionRepository
+
+import pytest
+
+from app.exceptions import ClientNotFound, InsufficientFundsError
 from app.models.client import Client
 from app.models.enums.transaction_type import TransactionType
-import pytest
-from app.exceptions import ClientNotFound, InsufficientFundsError
+from app.models.transaction import Transaction
+from app.repositories.transactions import TransactionRepository
+
 
 def test_create_transaction_success(db_session):
     repo = TransactionRepository(db_session)
 
-    client = Client(id=1, first_name="Test", last_name="Test", initial_balance=Decimal("100"))
+    client = Client(
+        id=1, first_name="Test", last_name="Test", initial_balance=Decimal("100")
+    )
     db_session.add(client)
     db_session.commit()
 
@@ -27,7 +32,6 @@ def test_create_transaction_success(db_session):
     assert t.transaction_type == TransactionType.DEPOSIT
 
 
-
 def test_create_transaction_client_not_found(db_session):
     repo = TransactionRepository(db_session)
 
@@ -43,7 +47,9 @@ def test_create_transaction_client_not_found(db_session):
 def test_create_transaction_negative_balance(db_session):
     repo = TransactionRepository(db_session)
 
-    client = Client(id=1, first_name="Test", last_name="Test", initial_balance=Decimal("100"))
+    client = Client(
+        id=1, first_name="Test", last_name="Test", initial_balance=Decimal("100")
+    )
     db_session.add(client)
     db_session.commit()
 
@@ -63,8 +69,18 @@ def test_list_transactions_for_client(db_session):
     db_session.add(client)
     db_session.commit()
 
-    t1 = Transaction(client_id=1, transaction_type=TransactionType.DEPOSIT, amount=10, balance_after=110)
-    t2 = Transaction(client_id=1, transaction_type=TransactionType.WITHDRAWAL, amount=5, balance_after=105)
+    t1 = Transaction(
+        client_id=1,
+        transaction_type=TransactionType.DEPOSIT,
+        amount=10,
+        balance_after=110,
+    )
+    t2 = Transaction(
+        client_id=1,
+        transaction_type=TransactionType.WITHDRAWAL,
+        amount=5,
+        balance_after=105,
+    )
     db_session.add_all([t1, t2])
     db_session.commit()
 
@@ -88,8 +104,22 @@ def test_list_all_transactions(db_session):
     db_session.add(client)
     db_session.commit()
 
-    db_session.add(Transaction(client_id=1, transaction_type=TransactionType.DEPOSIT, amount=10, balance_after=110))
-    db_session.add(Transaction(client_id=1, transaction_type=TransactionType.WITHDRAWAL, amount=5, balance_after=105))
+    db_session.add(
+        Transaction(
+            client_id=1,
+            transaction_type=TransactionType.DEPOSIT,
+            amount=10,
+            balance_after=110,
+        )
+    )
+    db_session.add(
+        Transaction(
+            client_id=1,
+            transaction_type=TransactionType.WITHDRAWAL,
+            amount=5,
+            balance_after=105,
+        )
+    )
     db_session.commit()
 
     result = repo.list_all()

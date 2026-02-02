@@ -1,8 +1,10 @@
-import pytest
 from decimal import Decimal
-from app.services.transactions import TransactionService
+
+import pytest
+
+from app.exceptions import InsufficientFundsError, NegativeAmountError, UnknownOperation
 from app.models.enums.transaction_type import TransactionType
-from app.exceptions import NegativeAmountError, InsufficientFundsError, UnknownOperation
+from app.services.transactions import TransactionService
 
 
 class DummyClient:
@@ -13,9 +15,13 @@ class DummyClient:
 def test_create_transaction_deposit(mocker):
     db = mocker.Mock()
 
-    mock_client_repo = mocker.patch("app.services.transactions.ClientRepository").return_value
+    mock_client_repo = mocker.patch(
+        "app.services.transactions.ClientRepository"
+    ).return_value
 
-    mock_transaction_repo = mocker.patch("app.services.transactions.TransactionRepository").return_value
+    mock_transaction_repo = mocker.patch(
+        "app.services.transactions.TransactionRepository"
+    ).return_value
 
     mock_client_repo.get.return_value = DummyClient(balance=Decimal("100"))
 
@@ -42,13 +48,16 @@ def test_create_transaction_deposit(mocker):
     )
 
 
-
 def test_create_transaction_withdrawal(mocker):
     db = mocker.Mock()
 
-    mock_client_repo = mocker.patch("app.services.transactions.ClientRepository").return_value
+    mock_client_repo = mocker.patch(
+        "app.services.transactions.ClientRepository"
+    ).return_value
 
-    mock_transaction_repo = mocker.patch("app.services.transactions.TransactionRepository").return_value
+    mock_transaction_repo = mocker.patch(
+        "app.services.transactions.TransactionRepository"
+    ).return_value
 
     mock_client_repo.get.return_value = DummyClient(balance=Decimal("200"))
 
@@ -68,7 +77,9 @@ def test_create_transaction_withdrawal(mocker):
 def test_create_transaction_withdrawal_insufficient_funds(mocker):
     db = mocker.Mock()
 
-    mock_client_repo = mocker.patch("app.services.transactions.ClientRepository").return_value
+    mock_client_repo = mocker.patch(
+        "app.services.transactions.ClientRepository"
+    ).return_value
 
     mock_client_repo.get.return_value = DummyClient(balance=Decimal("20"))
 
@@ -81,6 +92,7 @@ def test_create_transaction_withdrawal_insufficient_funds(mocker):
             amount=Decimal("50"),
         )
 
+
 def test_negative_amount_error(mocker):
     db = mocker.Mock()
 
@@ -92,6 +104,7 @@ def test_negative_amount_error(mocker):
             transaction_type=TransactionType.DEPOSIT,
             amount=Decimal("-10"),
         )
+
 
 def test_unknown_operation(mocker):
     db = mocker.Mock()
